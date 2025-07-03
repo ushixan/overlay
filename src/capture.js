@@ -1,0 +1,1 @@
+// Placeholder for screenshot + OCR helper logic if needed in future. 

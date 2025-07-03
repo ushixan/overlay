@@ -1,0 +1,23 @@
+{
+  "name": "ollama-overlay",
+  "version": "0.1.0",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "electronmon .",
+    "build-css": "tailwindcss -i ./src/renderer/styles.css -o ./src/renderer/tw.out.css --minify",
+    "build": "npm run build-css && electron-builder"
+  },
+  "dependencies": {
+    "electron": "^30.0.0",
+    "tesseract.js": "^4.0.2",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.4",
+    "postcss": "^8.4.24",
+    "autoprefixer": "^10.4.14",
+    "electronmon": "^2.0.3",
+    "electron-builder": "^26.0.17"
+  }
+} 

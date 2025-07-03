@@ -1,0 +1,24 @@
+<!doctype html>
+<html class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <title>AI Overlay</title>
+  <link rel="stylesheet" href="tw.out.css" />
+  <script type="module" src="renderer.js"></script>
+</head>
+<body class="h-full flex items-start justify-end p-4">
+  <div id="card" class="backdrop-blur-lg bg-white/30 shadow-xl rounded-2xl p-4 w-96 transition-all">
+    <div class="flex items-center gap-2 mb-2">
+      <select id="model" class="bg-white/70 rounded px-2 py-1 text-sm grow">
+        <option value="llama3">llama3</option>
+        <option value="mistral">mistral</option>
+        <option value="phi3">phi3</option>
+      </select>
+      <button id="close" class="text-sm px-2">×</button>
+    </div>
+    <textarea id="prompt" placeholder="Type or paste a question…" class="w-full bg-white/10 rounded p-2 h-20"></textarea>
+    <button id="ask" class="mt-2 w-full py-2 rounded bg-white/40 hover:bg-white/60 backdrop-blur text-sm">Ask</button>
+    <pre id="answer" class="whitespace-pre-wrap mt-4 text-sm max-h-80 overflow-y-auto"></pre>
+  </div>
+</body>
+</html> 
