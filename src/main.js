@@ -18,6 +18,7 @@ function createWindow() {
     frame: false,
     alwaysOnTop: true,
     vibrancy: 'fullscreen-ui', // macOS blur
+    resizable: true,
     webPreferences: {
       preload: join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -30,10 +31,13 @@ function createWindow() {
 app.whenReady().then(() => {
   createWindow();
 
-  /* 🔗   Cmd+Shift+A  →  Read clipboard text & send to renderer */
-  globalShortcut.register('Cmd+Shift+A', () => {
-    const text = clipboard.readText();
-    if (text) win.webContents.send('clipboard:text', text);
+  /* 🔗   Cmd+O  →  Toggle window visibility */
+  globalShortcut.register('Cmd+O', () => {
+    if (win.isVisible()) {
+      win.hide();
+    } else {
+      win.show();
+    }
   });
 
   /* 📸   Cmd+Shift+X  →  Interactive screenshot */
@@ -53,21 +57,39 @@ app.whenReady().then(() => {
       unlinkSync(tmp);
     }
   });
+
+  /* 🧠  Cmd+Shift+A: Read clipboard text and send to renderer */
+  globalShortcut.register('Cmd+Shift+A', () => {
+    const text = clipboard.readText();
+    if (text) win.webContents.send('clipboard:text', text);
+  });
 });
 
 /* 🧠  Handle inference requests from renderer */
-ipcMain.handle('ollama:ask', async (_e, { prompt, model }) => {
-  const r = await fetch('http://localhost:11434/api/generate', {
+ipcMain.handle('ollama:ask', async (_e, { prompt, model, messages }) => {
+  const r = await fetch('http://localhost:11434/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model,
-      prompt,
+      messages: messages && messages.length ? messages : [{ role: "user", content: prompt }],
       stream: false
     })
   });
   const json = await r.json();
-  return json.response;
+  return json.message?.content || 'No response from Ollama.';
+});
+
+ipcMain.on('move-window', (_e, direction) => {
+  if (!win) return;
+  const [x, y] = win.getPosition();
+  const offset = 40;
+  switch (direction) {
+    case 'ArrowUp': win.setPosition(x, y - offset); break;
+    case 'ArrowDown': win.setPosition(x, y + offset); break;
+    case 'ArrowLeft': win.setPosition(x - offset, y); break;
+    case 'ArrowRight': win.setPosition(x + offset, y); break;
+  }
 });
 
 app.on('window-all-closed', () => app.quit()); 

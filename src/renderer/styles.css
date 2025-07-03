@@ -1,5 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+ 
 /* you can add custom glass tweaks here */ 
+
+.glass-gradient {
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 100%) !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37) !important;
+  border-radius: 2rem !important;
+  border: 1.5px solid rgba(255,255,255,0.25) !important;
+  backdrop-filter: blur(24px) !important;
+} 
+
+/* ---------- Glass utilities ---------- */
+@layer components {
+  .glass { @apply backdrop-blur-2xl bg-white/5 ring-1 ring-white/20 shadow-2xl rounded-3xl relative overflow-hidden; }
+  .glass-inner { @apply backdrop-blur-lg bg-white/10 ring-1 ring-white/10 focus:ring-2 focus:ring-white/30; }
+  .btn-glass { @apply glass-inner hover:bg-white/20 active:scale-95 transition-all; }
+}
+
+/* gradient border via pseudo-element */
+.border-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;             /* thickness */
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.02));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+} 
